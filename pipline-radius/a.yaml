@@ -1,0 +1,251 @@
+# ConfigMap holding information about configuration files for primary/secondary and dockerinit
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-configmap
+data:
+  config: |
+    {
+      "attributes": {
+        "fields": [
+          {
+            "name": "@timestamp",
+            "type": "date",
+            "esTypes": ["date"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": true
+          },
+          {
+            "name": "_id",
+            "type": "string",
+            "esTypes": ["_id"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": false
+          },
+          {
+            "name": "_index",
+            "type": "string",
+            "esTypes": ["_index"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": false
+          },
+          {
+            "name": "_score",
+            "type": "number",
+            "count": 0,
+            "scripted": false,
+            "searchable": false,
+            "aggregatable": false,
+            "readFromDocValues": false
+          },
+          {
+            "name": "_source",
+            "type": "_source",
+            "esTypes": ["_source"],
+            "count": 0,
+            "scripted": false,
+            "searchable": false,
+            "aggregatable": false,
+            "readFromDocValues": false
+          },
+          {
+            "name": "_type",
+            "type": "string",
+            "esTypes": ["_type"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": false
+          },
+          {
+            "name": "docker.container_id",
+            "type": "string",
+            "esTypes": ["text"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": false,
+            "readFromDocValues": false
+          },
+          {
+            "name": "docker.container_id.keyword",
+            "type": "string",
+            "esTypes": ["keyword"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": true,
+            "parent": "docker.container_id",
+            "subType": "multi"
+          },
+          {
+            "name": "error_message",
+            "type": "string",
+            "esTypes": ["text"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": false,
+            "readFromDocValues": false
+          },
+          {
+            "name": "error_message.keyword",
+            "type": "string",
+            "esTypes": ["keyword"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": true,
+            "parent": "error_message",
+            "subType": "multi"
+          },
+          {
+            "name": "key_value_pairs.input_rad_parser",
+            "type": "number",
+            "esTypes": ["long"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": true
+          },
+          {
+            "name": "key_value_pairs.input_sys_parser",
+            "type": "number",
+            "esTypes": ["long"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": true
+          },
+          {
+            "name": "key_value_pairs.other_rad_parser",
+            "type": "number",
+            "esTypes": ["long"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": true
+          },
+          {
+            "name": "key_value_pairs.other_sys_parser",
+            "type": "number",
+            "esTypes": ["long"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": true
+          },
+          {
+            "name": "key_value_pairs.output_rad_parser",
+            "type": "number",
+            "esTypes": ["long"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": true
+          },
+          {
+            "name": "key_value_pairs.rad_alive_inserted",
+            "type": "number",
+            "esTypes": ["long"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": true
+          },
+          {
+            "name": "key_value_pairs.rad_session_not_found",
+            "type": "number",
+            "esTypes": ["long"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": true
+          },
+          {
+            "name": "key_value_pairs.rad_stop_inserted",
+            "type": "number",
+            "esTypes": ["long"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": true
+          },
+          {
+            "name": "key_value_pairs.sys_close_filtered",
+            "type": "number",
+            "esTypes": ["long"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": true
+          },
+          {
+            "name": "key_value_pairs.sys_close_parsed",
+            "type": "number",
+            "esTypes": ["long"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": true
+          },
+          {
+            "name": "key_value_pairs.sys_create_parsed",
+            "type": "number",
+            "esTypes": ["long"],
+            "count": 0,
+            "scripted": false,
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": true
+          },
+          {
+            "name": "key_value_pairs.total_output_sys_parser",
+            "type": "number",
+            "esTypes": ["long"],
+            "count": 0,
+            "scripted": true,
+            "script": "doc['key_value_pairs.output_rad_parser'].size
+            "count": 0,
+            "scripted": true,
+            "script": "doc['key_value_pairs.output_rad_parser'].size() - (doc['key_value_pairs.rad_alive_inserted'].size() + doc['key_value_pairs.rad_stop_inserted'].size())",
+            "lang": "painless",
+            "searchable": true,
+            "aggregatable": true,
+            "readFromDocValues": false
+          }
+        ],
+        "timeFieldName": "@timestamp",
+        "title": "logstash-*"
+      },
+      "id": "26524d30-66d1-11ee-a9ba-83bb76e11ede",
+      "migrationVersion": {
+        "index-pattern": "6.5.0"
+      },
+      "references": [],
+      "type": "index-pattern",
+      "updated_at": "2023-10-10T16:09:16.852Z",
+      "version": "WzIzLDFd"
+    }

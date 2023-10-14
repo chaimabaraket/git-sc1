@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmapradius
+data:
+  .env: |
+   SENTINELADDR = db-subscribers-0.db-subscribers:5000,db-subscribers-1.db-subscribers:5000,db-subscribers-2.db-subscribers:5000
+   REDISMASTER = mymaster
+   REDISPASSWORD = secret
+   REDIS_URI = db-subscribers:6379
+   KAFKA_TOPIC = 
+   KAFKA_BROKER = 
+   KAFKA_GROUP = 
+   DB_STAGE = mongodb://lms:lms@db_session:27017/
+   DB_USERS = mongodb://lms:lms@db_users:27017/
+   TZ = Africa/Douala
+   KAFKA_PRODUCER_NUMBER = 2
+   INSERT_USERS_COMPLETE = 'true'
+   THREAD_PROCESS_NUMBER = 250
+   BATCH_SIZE = '250'
+   FILTER = false
+   DEBUG = 'true'
+   PORTS = '1812,1813'
+   NIC = eth0
+   RADIUS_EXPIRATION = 168
+   STATS_RANGE_TIME = 60

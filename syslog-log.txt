@@ -1,0 +1,45 @@
+
+PUT _ingest/pipeline/syslog-log
+{
+  "processors": [
+    {
+      "grok": {
+        "field": "log",
+        "patterns": [
+          "%{YEAR}/%{MONTHNUM}/%{MONTHDAY} %{TIME:timestamp} map\\[%{GREEDYDATA:key_value_pairs}\\]"
+        ]
+      }
+    },
+    {
+      "script": {
+        "source": "String[] kvPairs = ctx.key_value_pairs.splitOnToken(\" \");\r\n def kvMap = [:];\r\n for (String kvPair : kvPairs) {\r\n String[] kv = kvPair.splitOnToken(\":\");\r\n if (kv.length == 2) {\r\n kvMap[kv[0]] = Integer.parseInt(kv[1]);\r\n }\r\n }\r\n ctx.key_value_pairs = kvMap;\r\n ctx.prefix = ctx.prefix.trim();"
+      }
+    },
+    {
+      "remove": {
+        "field": "log"
+      }
+    }
+  ],
+  "on_failure": [
+    {
+      "set": {
+        "field": "error_message",
+        "value": "{{ _ingest.on_failure_message }}"
+      }
+    }
+  ]
+}
+
+# Define the Index Template
+PUT _template/my_template
+{
+  "index_patterns": ["logstash-*"],
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "index.default_pipeline": "syslog-log"
+  }
+
+}
+

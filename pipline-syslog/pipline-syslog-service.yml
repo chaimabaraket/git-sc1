@@ -1,0 +1,21 @@
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    name: syslog-pipline
+  name: syslog-pipline
+spec:
+  selector:
+    app: syslog-pipline
+  ports:
+    - name: "514"
+      port: 514
+      targetPort: 514
+      protocol: UDP
+    - name: "1254"
+      port: 1254
+      targetPort: 1254
+  # externalIPs:
+  #   - 10.7.13.180
+  #   - 10.7.13.181
+---

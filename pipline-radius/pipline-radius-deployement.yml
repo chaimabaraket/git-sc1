@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: radius-pipline
+  labels:
+    app: radius-pipline
+spec:
+  ports:
+   - name: "1812"
+     port: 1812
+     targetPort: 1812
+     protocol: UDP
+   - name: "1813"
+     port: 1813
+     targetPort: 1813
+     protocol: UDP
+  selector:
+    app: radius-pipline
+  externalIPs:
+    - 10.12.73.196
+    - 10.12.73.197
+    - 10.12.73.198
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radius-pipline
+  labels:
+    app: radius-pipline
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radius-pipline
+  template:
+    metadata:
+      labels:
+        app: radius-pipline
+    spec:
+      containers:
+      - name: radius-pipline
+        imagePullPolicy: IfNotPresent
+        image: git.pyxis.com.tn:5000/radius-pipline:1.1
+        ports:
+        - containerPort: 1812
+        - containerPort: 1813 
+        env:
+        - name: SENTINELADDR
+          value: redis-0.redis:5000,redis-1.redis:5000,redis-2.redis:5000
+        - name: REDISMASTER
+          value: mymaster
+        - name: REDISPASSWORD
+          value: secret
+        - name: REDIS_URI
+          value: redis:6379
+        - name: KAFKA_TOPIC
+          value: ''
+        - name: KAFKA_BROKER
+          value: ''
+        - name: KAFKA_GROUP
+          value: ''
+        - name: DB_STAGE
+          value: mongodb://lms:lms@db-session:27017/
+        - name: DB_USERS
+          value: mongodb://lms:lms@db-users:27017/
+        - name: TZ
+          value: Africa/Douala
+        - name: KAFKA_PRODUCER_NUMBER
+          value: "2"
+        - name: INSERT_USERS_COMPLETE
+          value: 'true'
+        - name: THREAD_PROCESS_NUMBER
+          value: "250"
+        - name: BATCH_SIZE
+          value: "250"
+        - name: FILTER
+          value: 'false'
+        - name: DEBUG
+          value: 'true'
+        - name: PORTS
+          value: '1812,1813'
+        - name: NIC
+          value: eth0
+        - name: RADIUS_EXPIRATION
+          value: "168"
+        - name: STATS_RANGE_TIME
+          value: "60"
+        volumeMounts:
+           - name: env
+             mountPath: "/app/.env"
+      volumes:
+        - name: env
+          configMap:
+             name: configmapradius

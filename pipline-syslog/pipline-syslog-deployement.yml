@@ -1,0 +1,136 @@
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: syslog-pipline
+#  labels:
+#    app: syslog-pipline
+#spec:
+#  ports:
+#   - name: "514"
+#     port: 514
+#     targetPort: 514
+#     protocol: UDP
+#   - name: "1254"
+#     port: 1254
+#     targetPort: 1254
+#     protocol: TCP
+#  selector:
+#    app: syslog-pipline
+#  externalIPs:
+#    - 10.7.13.180
+#    - 10.7.13.181
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: syslog-pipline
+  labels:
+    app: syslog-pipline
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: syslog-pipline
+  template:
+    metadata:
+      labels:
+        app: syslog-pipline
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            #nodeSelectorTerms:
+            #- matchExpressions:
+            #  - key: kubernetes.io/hostname
+            #    operator: In
+            #    values:
+            #    - lmspyxis-collecte2
+                
+      containers:
+      - name: syslog-pipline
+        image: git.pyxis.com.tn:5000/syslog-pipline:1.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 514
+          #protocol : UDP
+        env:
+        - name: DB_USERS
+          value: mongodb://lms:lms@db-users:27017/
+        - name: DB_SESSION
+          value: mongodb://lms:lms@db-session:27017/
+        - name: BATCH_SIZE
+          value: '1000'
+        - name: THREAD_PROCESS_NUMBER
+          value: '1'
+        - name: PARSER_THREAD_NUMBER
+          value: '10'
+        - name: TZ
+          value: Africa/Douala
+        - name: DEBUG
+          value: 'true'
+        - name: TIME_JOIN_RANGE
+          value: '60'
+        - name: STATS_RANGE_TIME
+          value: '30'
+        - name: INSERT_UNJOINED_SESSIONS
+          value: 'false'
+        - name: INDEX_DATA
+          value: 'true'
+        - name: SENTINELADDR
+          value: redis-0.redis:5000,redis-1.redis:5000,redis-2.redis:5000
+        - name: REDISMASTER
+          value: mymaster
+        - name: REDISPASSWORD
+          value: secret
+        - name: PORTS
+          value: '514'
+        - name: NIC
+          value: eth0
+        volumeMounts:
+        - name: csv-data
+          mountPath: /data/
+
+      - name: csv2parquet
+        image: git.pyxis.com.tn:5000/csv2parquet
+        imagePullPolicy: Always
+        env:
+        - name: TZ
+          value: Africa/Douala
+        - name: TASK_SLOT
+          value: '{{ .Task.Slot }}'
+        - name: FTP_HOST
+          value: 
+        - name: FTP_USER
+          value: 
+        - name: FTP_PASS
+          value: 
+        - name: REMOTE_DIR
+          value: '10'
+        - name: LIMIT_IN_GB
+          value: "800"
+        - name: NUMBER_OF_FILES_TO_DELETE
+          value: "1440"
+        command: 
+        - python3
+        args:
+        - /app/script.py
+        volumeMounts:
+        - name: parquet-data
+          mountPath: /app/DATA/csv_data/parquet/
+        - name: csv-data
+          mountPath: /app/DATA/csv_data/
+
+      - name: datacollector
+        image: git.pyxis.com.tn:5000/api-csv
+        ports:
+        - containerPort: 1254
+        # volumeMounts:
+        # - name: parquet-data
+        #   mountPath: /app/DATA/csv_data/parquet/  
+    
+      volumes:
+      - name: parquet-data
+        persistentVolumeClaim:
+          # claimName: pfs-pvc 
+      - name: csv-data
+        emptyDir: {}
